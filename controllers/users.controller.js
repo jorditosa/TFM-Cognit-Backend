@@ -57,13 +57,12 @@ const createUser = async (req, res) => {
 }
 
 const updateUser = async (req, res) => {
-  const { token } = req.params;
   const { user_status, user_email, user_points, skill_know_points, skill_sust_points, skill_prot_points, skill_expl_points } = req.body;
 
   try {
     // Pool query
     const result = await pool.query('UPDATE users SET user_status = $1, user_email = $2, user_points = $3, skill_know_points = $4, skill_sust_points = $5, skill_prot_points = $6, skill_expl_points = $7 WHERE user_code_validation = $8 RETURNING *',
-      [user_status, user_email, user_points, skill_know_points, skill_sust_points, skill_prot_points, skill_expl_points, token]);
+      [user_status, user_email, user_points, skill_know_points, skill_sust_points, skill_prot_points, skill_expl_points]);
 
     // Estado respuesta
     res.status(200).json(result.rows[0]);
