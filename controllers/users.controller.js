@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import pool from '../db.js';
+import { checkSkill } from '../helpers/checkSkill.js';
 
 const getUser = async (req, res) => {
   const { token } = req.params;
@@ -57,8 +58,7 @@ const createUser = async (req, res) => {
 }
 
 const updateUser = async (req, res) => {
-  const { user } = req.params.user_id;
-  const { points, skill, skill_points } = req.body;
+  const { points, skill, skill_points, user } = req.body;
   console.log(points, skill, skill_points, user);
 
   try {
@@ -66,12 +66,18 @@ const updateUser = async (req, res) => {
     const userInfo = await pool.query('SELECT * FROM cognit.users WHERE user_id = $1', [user]);
     console.log(userInfo);
 
+    // Update User Points
     const newPoints = parseInt(userInfo.rows[0].user_points) + parseInt(points);
-    console.log(newPoints);
+
+    // Update user skill points
+    const skillKnow = parseInt(userInfo.rows[0].skill_know_points) + checkSkill(skill, skill_points);
+    const skillProt = parseInt(userInfo.rows[0].skill_prot_points) + checkSkill(skill, skill_points);
+    const skillSust = parseInt(userInfo.rows[0].skill_sust_points) + checkSkill(skill, skill_points);
+    const skillExpl = parseInt(userInfo.rows[0].skill_expl_points) + checkSkill(skill, skill_points);
 
     // Pool query
-    const result = await pool.query('UPDATE cognit.users SET user_points = $1, skill_know_points = $2 WHERE user_id = $3 RETURNING *',
-      [newPoints, skill, user]);
+    const result = await pool.query('UPDATE cognit.users SET user_points = $1, skill_know_points = $2, skill_sust_points = $3, skill_prot_points = $4, skill_expl_points = $5 WHERE user_id = $6 RETURNING *',
+      [newPoints, skillKnow, skillProt, skillSust, skillExpl, user]);
 
     // Estado respuesta
     res.status(200).json(result.rows[0]);
