@@ -45,7 +45,7 @@ const createUser = async (req, res) => {
 
   try {
     // Pool query
-    const result = await pool.query('INSERT INTO users (user_status, user_code_validation, user_email, user_points, skill_know_points, skill_sust_points, skill_prot_points, skill_expl_points) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+    const result = await pool.query('INSERT INTO cognit.users (user_status, user_code_validation, user_email, user_points, skill_know_points, skill_sust_points, skill_prot_points, skill_expl_points) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
       [user_status, user_code_validation, user_email, user_points, skill_know_points, skill_sust_points, skill_prot_points, skill_expl_points]);
 
     // Estado respuesta
@@ -57,12 +57,21 @@ const createUser = async (req, res) => {
 }
 
 const updateUser = async (req, res) => {
-  const { user_status, user_email, user_points, skill_know_points, skill_sust_points, skill_prot_points, skill_expl_points } = req.body;
+  const { user } = req.params.user_id;
+  const { points, skill, skill_points } = req.body;
+  console.log(points, skill, skill_points, user);
 
   try {
+    // Get user
+    const userInfo = await pool.query('SELECT * FROM cognit.users WHERE user_id = $1', [user]);
+    console.log(userInfo);
+
+    const newPoints = parseInt(userInfo.rows[0].user_points) + parseInt(points);
+    console.log(newPoints);
+
     // Pool query
-    const result = await pool.query('UPDATE users SET user_status = $1, user_email = $2, user_points = $3, skill_know_points = $4, skill_sust_points = $5, skill_prot_points = $6, skill_expl_points = $7 WHERE user_code_validation = $8 RETURNING *',
-      [user_status, user_email, user_points, skill_know_points, skill_sust_points, skill_prot_points, skill_expl_points]);
+    const result = await pool.query('UPDATE cognit.users SET user_points = $1, skill_know_points = $2 WHERE user_id = $3 RETURNING *',
+      [newPoints, skill, user]);
 
     // Estado respuesta
     res.status(200).json(result.rows[0]);
