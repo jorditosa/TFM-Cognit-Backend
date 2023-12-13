@@ -1,14 +1,4 @@
-export function checkSkill(skill, points) {
-  switch (skill) {
-    case 'know':
-      return points;
-    case 'sust':
-      return points;
-    case 'prot':
-      return points;
-    case 'expl':
-      return points;
-    default:
-      return 0;
-  }
+export function checkSkill(skill, points, skillToCheck) {
+  if (skill === skillToCheck) return +points;
+  return 0
 } 

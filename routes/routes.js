@@ -11,7 +11,7 @@ router.get('/users/:token', getUser);
 
 router.post('/users', createUser);
 
-router.put('/users?user_id=:user', updateUser);
+router.put('/users', updateUser);
 
 // Jocs i accions endpoints
 router.get('/games/', getGames);
