@@ -38,7 +38,8 @@ const createUser = async (req, res) => {
     skill_know_points,
     skill_sust_points,
     skill_prot_points,
-    skill_expl_points
+    skill_expl_points,
+    user_city
   } = req.body;
 
   // Create new token and assign to user_status
@@ -46,8 +47,8 @@ const createUser = async (req, res) => {
 
   try {
     // Pool query
-    const result = await pool.query('INSERT INTO cognit.users (user_status, user_code_validation, user_email, user_points, skill_know_points, skill_sust_points, skill_prot_points, skill_expl_points) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
-      [user_status, user_code_validation, user_email, user_points, skill_know_points, skill_sust_points, skill_prot_points, skill_expl_points]);
+    const result = await pool.query('INSERT INTO cognit.users (user_status, user_code_validation, user_email, user_points, skill_know_points, skill_sust_points, skill_prot_points, skill_expl_points, user_city) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
+      [user_status, user_code_validation, user_email, user_points, skill_know_points, skill_sust_points, skill_prot_points, skill_expl_points, user_city]);
 
     // Estado respuesta
     res.status(201).json(result.rows[0]);
