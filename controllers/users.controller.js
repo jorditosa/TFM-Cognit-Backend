@@ -55,7 +55,7 @@ const createUser = async (req, res) => {
     if (result) {
       const resend = new Resend(process.env.VITE_EMAIL_API_KEY);
       const data = await resend.emails.send({
-        from: 'Cognit <info@cognit.cat>',
+        from: 'Cognit <info@cognit.site>',
         to: user_email,
         subject: 'Bencingut/da a Cognit',
         html: `
