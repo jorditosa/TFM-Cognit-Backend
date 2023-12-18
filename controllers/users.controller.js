@@ -53,7 +53,7 @@ const createUser = async (req, res) => {
 
     // Send an email
     if (result) {
-      const resend = new Resend(process.env.RESEND_API_KEY);
+      const resend = new Resend(import.meta.env.RESEND_API_KEY);
       const data = await resend.emails.send({
         from: 'Cognit <info@cognit.cat>',
         to: user_email,
