@@ -50,20 +50,22 @@ const createUser = async (req, res) => {
     const result = await pool.query('INSERT INTO cognit.users (user_status, user_code_validation, user_email, user_points, skill_know_points, skill_sust_points, skill_prot_points, skill_expl_points, user_city) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
       [user_status, user_code_validation, user_email, user_points, skill_know_points, skill_sust_points, skill_prot_points, skill_expl_points, user_city]);
 
-    const resend = new Resend(process.env.RESEND_API_KEY);
 
     // Send an email
-    const data = await resend.emails.send({
-      from: 'Cognit <info@cognit.cat>',
-      to: user_email,
-      subject: 'Bencingut/da a Cognit',
-      html: `
-      <h1>Benvingut/da a Cognit</h1>
-      <p>Per validar els jocs de Cognit t'hem assignat un codi de validació.</p>
-      <hr />
-      <p>El teu codi de validació es: ${user_code_validation}</p>
-      `,
-    })
+    if (result) {
+      const resend = new Resend(process.env.RESEND_API_KEY);
+      const data = await resend.emails.send({
+        from: 'Cognit <info@cognit.cat>',
+        to: user_email,
+        subject: 'Bencingut/da a Cognit',
+        html: `
+        <h1>Benvingut/da a Cognit</h1>
+        <p>Per validar els jocs de Cognit t'hem assignat un codi de validació.</p>
+        <hr />
+        <p>El teu codi de validació es: ${user_code_validation}</p>
+        `,
+      })
+    }
 
     // Estado respuesta
     res.status(201).json(result.rows[0]);
