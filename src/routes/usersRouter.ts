@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { body } from 'express-validator'
-import { getUsers, getUserById, registerUser, updateUser, deleteUser } from '../controllers/UsersController';
+import { getUsers, getUserById, registerUser, updateUser, deleteUser, confirmAccount } from '../controllers/UsersController';
 import { birthDayRegex } from '../constants/regex';
 import { validateUserExists, validateUserId, validateUserInput } from '../middleware/user-validator';
 
@@ -32,6 +32,12 @@ router.delete('/:id',
     validateUserExists,
     deleteUser
 );
+
+router.post('/confirm-account',
+    body('token')
+    .notEmpty().isLength({min: 6, max: 6}).withMessage('token not valid'),
+    confirmAccount
+)
 
 
 export default router;

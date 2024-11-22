@@ -62,3 +62,23 @@ export const deleteUser = async(req: Request, res: Response) => {
     await req.user.destroy()
     res.status(200).json('User deleted')
 }
+
+export const confirmAccount = async (req:Request, res: Response) => {
+    const { token } = req.body
+
+    const user = await Users.findOne({
+        where: { token: token }
+    })
+
+    if (!user) {
+        const error = new Error('Token not valid')
+        res.status(401).json({error: error.message})
+        return
+    }
+
+    user.confirmed = true
+    user.token = null
+    await user.save()
+
+    res.json('Account confirmed')
+}

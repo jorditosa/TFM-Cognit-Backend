@@ -3,6 +3,7 @@ import express from 'express';
 import usersRouter from './routes/usersRouter';
 import { db } from './config/db';
 import colors from 'colors'
+import { limiter } from './config/limiter';
 
 // Database
 async function connectDB() {
@@ -21,6 +22,9 @@ const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
+
+// Limiting request
+app.use(limiter)
 
 // Routes
 app.use('/api/users', usersRouter)
