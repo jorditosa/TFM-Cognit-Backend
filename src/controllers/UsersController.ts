@@ -1,5 +1,8 @@
 import type { Request, Response } from "express"
 import Users from "../models/Users"
+import { hashPassword } from "../utils/auth"
+import { generateToken } from "../utils/token"
+import { AuthEmail } from "../emails/AuthEmail"
 
 declare global {
     namespace Express {
@@ -27,11 +30,22 @@ export const getUserById = async(req: Request, res: Response) => {
     res.json(req.user)
 }
 export const registerUser = async(req: Request, res: Response) => {
-    
+    const { username, password, email, points } = req.body
+
     try {
         const user = new Users(req.body)
+        user.password = await hashPassword(password)
+        user.token = generateToken()
 
         await user.save()
+
+        // Sending email
+        AuthEmail.sendConfirmationEmail({ 
+            username, 
+            email, 
+            token: user.token 
+        })
+
         res.status(201).json('User created')
     } catch (error) {
         res.status(500).json({ error: "Error creating user"})

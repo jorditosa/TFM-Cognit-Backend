@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from 'express'
 import { param, validationResult, body } from 'express-validator'
 import Users from '../models/Users'
-import { birthDayRegex } from '../constants/regex'
+import { birthDayRegex, emailRegex } from '../constants/regex'
 
 export const validateUserId = async (req: Request, res: Response, next: NextFunction) => {
     await param('id')
@@ -26,6 +26,7 @@ export const validateUserExists = async (req: Request, res: Response, next: Next
         if (!user) {
             const error = new Error("User not found")
             res.status(404).json({ error: error.message })
+            return;
         }
 
         req.user = user
@@ -40,9 +41,9 @@ export const validateUserInput = async (req: Request, res: Response, next: NextF
     await body('username')
         .notEmpty().withMessage('Username is required').run(req)
     await body('password')
-            .notEmpty().isLength({ min: 8 }).withMessage('Password is required').run(req)
-    await body('birthDate')
-            .notEmpty().matches(birthDayRegex).withMessage('Birth date is required').run(req)
+            .notEmpty().isLength({ min: 8 }).withMessage('Password is not valid').run(req)
+    await body('email')
+            .notEmpty().matches(emailRegex).withMessage('Email is not valid').run(req)
     await body('points')
     .isInt().withMessage('Points must be an integer').run(req)
 

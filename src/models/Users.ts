@@ -16,14 +16,24 @@ class Users extends Model {
     declare password: string
 
     @Column({
-        type: DataType.STRING(50)
+        type: DataType.STRING(100)
     })
-    declare birthDate: string
+    declare email: string
 
     @Column({
         type: DataType.INTEGER
     })
     declare points: number
+
+    @Column({
+        type: DataType.STRING(6)
+    })
+    declare token: string
+
+    @Column({
+        type: DataType.BOOLEAN
+    })
+    declare confirmed: boolean
 }
 
 export default Users
