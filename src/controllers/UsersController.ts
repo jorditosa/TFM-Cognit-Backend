@@ -1,8 +1,9 @@
 import type { Request, Response } from "express"
 import Users from "../models/Users"
-import { hashPassword } from "../utils/auth"
+import { checkPassword, hashPassword } from "../utils/auth"
 import { generateToken } from "../utils/token"
 import { AuthEmail } from "../emails/AuthEmail"
+import { generateJWT } from "../utils/jwt"
 
 declare global {
     namespace Express {
@@ -81,4 +82,33 @@ export const confirmAccount = async (req:Request, res: Response) => {
     await user.save()
 
     res.json('Account confirmed')
+}
+
+export const login = async (req:Request, res: Response) => {
+    const { username, password } = req.body
+
+    const user = await Users.findOne({
+        where: {username}
+    })
+    if (!user) {
+        const error = new Error("Username is already registered")
+        res.status(409).json({error: error.message})
+        return
+    }
+    if (!user.confirmed) {
+        const error = new Error("Username does not confirm account")
+        res.status(403).json({error: error.message})
+        return
+    }
+
+    const isPasswordCorrect = await checkPassword(password, user.password)
+    if (!isPasswordCorrect) {
+        const error = new Error("Credentials not valid")
+        res.status(401).json({error: error.message})
+        return
+    }
+
+    const token = generateJWT(user.id)
+
+    res.json(token)
 }
