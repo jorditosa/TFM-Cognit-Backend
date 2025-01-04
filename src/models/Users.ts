@@ -4,7 +4,7 @@ import { Table, Column, Model, DataType, HasMany, BelongsTo, ForeignKey } from '
     tableName: 'users'
 })
 
-class Users extends Model {
+class User extends Model {
     @Column({
         type: DataType.STRING(100)
     })
@@ -36,4 +36,4 @@ class Users extends Model {
     declare confirmed: boolean
 }
 
-export default Users
+export default User

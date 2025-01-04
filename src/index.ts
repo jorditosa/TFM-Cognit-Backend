@@ -4,6 +4,7 @@ import usersRouter from './routes/usersRouter';
 import { db } from './config/db';
 import colors from 'colors'
 import { limiter } from './config/limiter';
+import morgan from 'morgan'
 
 // Database
 async function connectDB() {
@@ -20,15 +21,16 @@ connectDB()
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Middleware
+// Middlewares
 app.use(express.json());
-app.use(cors())
+app.use(cors());
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 
 // Limiting request
 app.use(limiter)
 
 // Routes
-app.use('/api/users', usersRouter)
+app.use('/api/auth', usersRouter)
 
 app.listen(port, () => {
   console.log(`Server is running on port http://localhost:${process.env.PORT}`);

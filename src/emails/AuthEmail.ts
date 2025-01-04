@@ -1,23 +1,37 @@
 import { transport } from "../config/nodemailer"
 
 type EmailType = {
-    username: string
-    email: string
+    username: string,
+    email: string,
     token: string
 }
+
 export class AuthEmail {
     static sendConfirmationEmail = async (user: EmailType) => {
         const email = await transport.sendMail({
-            from: 'Cognit',
+            from: "Cognit <admin@cognit.com>",
             to: user.email,
-            subject: 'Please confirm your account',
+            subject: "Cognit - Confirmar compte",
             html: `
-            <p>Hello ${user.username}, please confirm your account by clicking on the following link and introducing the confirmation code:</p>
-            <a href="http://localhost:3000/api/users/confirm/${user.token}">Confirm my account</a>
-            <p>Convirmation code: ${user.token}</p>
+                <h1> Hola ${user.username}! </h1>
+                <p>T'has registrat a Cognit, només queda que confirmis el teu registre per formar part de tota la comynitat, així doncs</p>
+                <a href=${process.env.FRONTEND_URL}/auth/confirm-account>confirma el teu compte</a>,
+                <p>indicant el codi de registre: ${user.token}</p>
             `
         })
+    }
 
-        console.log('Email sent', email.messageId)
+    static sendPasswordResetToken = async (user: EmailType) => {
+        const email = await transport.sendMail({
+            from: "Cognit <admin@cognit.com>",
+            to: user.email,
+            subject: "Cognit - Reestableix contrasenya",
+            html: `
+                <h1> Hola ${user.username}! </h1>
+                <p>Has sol·licitat reestablir la contrasenya. Si no has estat tu siusplau elimina aquest missatge o fes-nos indicació siusplau</p>
+                <a href=${process.env.FRONTEND_URL}/auth/new-password>reestableir contrassenya</a>,
+                <p>indicant el codi de reestabliment: ${user.token}</p>
+            `
+        })
     }
 }
