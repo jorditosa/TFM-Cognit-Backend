@@ -10,9 +10,10 @@ const router = Router()
 router.use(limiter)
 
 router.get('/users', AuthController.getAllUsers)
+
 router.post('/create-account', 
-    body('name')
-    .notEmpty().withMessage('Name can not be empty'),
+    body('username')
+    .notEmpty().withMessage('Username can not be empty'),
     body('password')
     .isLength({min: 8}).withMessage('Password min length has to be 8 characters'),
     body('email')

@@ -9,12 +9,12 @@ type EmailType = {
 export class AuthEmail {
     static sendConfirmationEmail = async (user: EmailType) => {
         const email = await transport.sendMail({
-            from: "Cognit <admin@cognit.com>",
+            from: "Comynity <admin@comynit.com>",
             to: user.email,
-            subject: "Cognit - Confirmar compte",
+            subject: "Comynit - Confirmar compte",
             html: `
                 <h1> Hola ${user.username}! </h1>
-                <p>T'has registrat a Cognit, només queda que confirmis el teu registre per formar part de tota la comynitat, així doncs</p>
+                <p>T'has registrat a Comynit, només queda que confirmis el teu registre per formar part de tota la comynitat, així doncs</p>
                 <a href=${process.env.FRONTEND_URL}/auth/confirm-account>confirma el teu compte</a>,
                 <p>indicant el codi de registre: ${user.token}</p>
             `
@@ -23,9 +23,9 @@ export class AuthEmail {
 
     static sendPasswordResetToken = async (user: EmailType) => {
         const email = await transport.sendMail({
-            from: "Cognit <admin@cognit.com>",
+            from: "Comynity <admin@comynit.com>",
             to: user.email,
-            subject: "Cognit - Reestableix contrasenya",
+            subject: "Comynit - Reestableix contrasenya",
             html: `
                 <h1> Hola ${user.username}! </h1>
                 <p>Has sol·licitat reestablir la contrasenya. Si no has estat tu siusplau elimina aquest missatge o fes-nos indicació siusplau</p>

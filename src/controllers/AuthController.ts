@@ -1,9 +1,9 @@
 import type { NextFunction, Request, Response } from "express"
+import User from "../models/User"
 import { checkPassword, hashPassword } from "../utils/auth"
 import { generateToken } from "../utils/genToken"
 import { AuthEmail } from "../emails/AuthEmail"
 import { generateJWT } from "../utils/jwt"
-import User from "../models/Users"
 
 export class AuthController {
     static getAllUsers = async (req: Request,res: Response) => {
@@ -15,7 +15,7 @@ export class AuthController {
 
         const userExists = await User.findOne({ where: {email}})
         if(userExists) {
-            // Usuer already created
+            // User already created
             const error = new Error("There is a problem creating user")
             res.status(409).json({error: error.message})
             return
@@ -28,11 +28,11 @@ export class AuthController {
 
             await user.save()
 
-            await AuthEmail.sendConfirmationEmail({
-                username: user.username,
-                email: user.email,
-                token: user.token,
-            })
+            // await AuthEmail.sendConfirmationEmail({
+            //     username: user.username,
+            //     email: user.email,
+            //     token: user.token,
+            // })
             res.json("User created successfully")
         } catch (error) {
             res.status(500).json({error: "Error creating user"})
