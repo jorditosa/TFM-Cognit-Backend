@@ -30,6 +30,12 @@ class User extends Model {
     })
     declare token: string
 
+    @Default(0)
+    @Column({
+        type: DataType.INTEGER
+    })
+    declare points: number
+
     @Default(false)
     @Column({
         type: DataType.BOOLEAN

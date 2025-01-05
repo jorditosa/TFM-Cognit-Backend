@@ -42,18 +42,26 @@ export class AuthController {
     static confirmAccount = async (req: Request, res: Response, next: NextFunction) => {
         const { token } = req.body
 
-        const user = await User.findOne({ where: { token }})
-        if (!user) {
-            const error = new Error("Token not valid")
-            res.status(401).json({ error: error.message })
-            return
+        try {
+            const user = await User.findOne({ where: { token }})
+            if (!user) {
+                const error = new Error("Token not valid")
+                res.status(401).json({ error: error.message })
+                return
+            }
+            
+            user.confirmed = true
+            user.token = null
+            await user.save()
+
+            // Establecer cookie
+            const userData = { id: user.id, email: user.email, points: user.points}; 
+            res.cookie("COGNIT_USER", JSON.stringify(userData))
+            // Devolver confirmacion
+            res.json({ message: "Account confirmed", user: userData });
+        } catch (error) {
+            next(error)
         }
-
-        user.confirmed = true
-        user.token = null
-        await user.save()
-
-        res.json("Account confirmed")
     }
 
     static login = async (req: Request, res: Response, next: NextFunction) => {
