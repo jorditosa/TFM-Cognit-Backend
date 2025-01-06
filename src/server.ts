@@ -3,6 +3,7 @@ import colors from 'colors'
 import morgan from 'morgan'
 import { db } from "./config/db"
 import usersRouter from './routes/authRouter'
+import gamesRouter from './routes/gamesRouter'
 import helmet from "helmet";
 import cors from 'cors'
 import session from 'express-session'
@@ -10,7 +11,9 @@ import session from 'express-session'
 async function connectDB() {
     try {
         await db.authenticate()
-        db.sync()
+        db.sync(
+            {alter: true}
+        )
         console.log( colors.blue.bold('Database connection successfull'))
     } catch (error) {
         console.log( colors.red('Database connection failed'))
@@ -44,5 +47,6 @@ app.use(
 
 // routing
 app.use('/api/auth', usersRouter)
+app.use('/api/games', gamesRouter)
 
 export default app

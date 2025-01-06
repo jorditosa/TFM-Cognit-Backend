@@ -1,5 +1,5 @@
 import { Table, Column, DataType, HasMany, BelongsTo, ForeignKey, Model, Default, Unique, AllowNull } from 'sequelize-typescript'
-import Commynity from './Commynity'
+import Commynity from './Games'
 
 @Table({
     tableName: 'users'
@@ -41,14 +41,6 @@ class User extends Model {
         type: DataType.BOOLEAN
     })
     declare confirmed: boolean
-
-    @HasMany(() => Commynity, {
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-    })
-    declare Commynities: Commynity[]
-
-
 }
 
 export default User
