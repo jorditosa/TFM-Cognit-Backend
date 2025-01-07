@@ -11,6 +11,12 @@ router.use(limiter)
 
 router.get('/users', AuthController.getAllUsers)
 
+router.post('/users', 
+    body('token')
+    .notEmpty().isLength({min: 6, max: 6}).withMessage('Token not valid'),
+    handleInputErrors,
+    AuthController.getUserByToken)
+
 router.post('/create-account', 
     body('username')
     .notEmpty().withMessage('Username can not be empty'),

@@ -7,7 +7,39 @@ import { generateJWT } from "../utils/jwt"
 
 export class AuthController {
     static getAllUsers = async (req: Request,res: Response) => {
-        console.log('GET Users')
+        
+        try {
+            const users = await User.findAll()
+            if (!users) {
+                const error = new Error("Users not foun")
+                res.status(404).json({ error: error.message })
+                return
+            }
+
+            res.json(users);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    static getUserByToken = async (req: Request,res: Response, next: NextFunction) => {
+        const { token } = req.body
+        console.log(token)
+        
+        try {
+            const user = await User.findOne({ where: { token }})
+            if (!user) {
+                const error = new Error("Token not valid")
+                res.status(401).json({ error: error.message })
+                return
+            }
+
+            const tokenCode = user.token;
+
+            res.json({ message: "Token confirmed", token: tokenCode });
+        } catch (error) {
+            next(error)
+        }
     }
 
     static createAccount = async (req: Request,res: Response) => {
@@ -51,7 +83,6 @@ export class AuthController {
             }
             
             user.confirmed = true
-            user.token = null
             await user.save()
 
             // Establecer cookie
