@@ -119,8 +119,9 @@ export class AuthController {
             return
         }
 
-        const token = generateJWT(user.id)
-        res.json(token)
+        const userData = { id: user.id, email: user.email, points: user.points}; 
+        res.cookie("COGNIT_USER", JSON.stringify(userData))
+        res.json({ message: "User authenticated", user: userData });
     }
 
     static forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
