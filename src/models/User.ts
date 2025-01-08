@@ -32,9 +32,9 @@ class User extends Model {
 
     @Default(0)
     @Column({
-        type: DataType.INTEGER
+        type: DataType.STRING
     })
-    declare points: number
+    declare points: string
 
     @Default(false)
     @Column({

@@ -17,6 +17,8 @@ router.post('/users',
     handleInputErrors,
     AuthController.getUserByToken)
 
+router.patch('/users/points', AuthController.updatePlayerPoints)
+
 router.post('/create-account', 
     body('username')
     .notEmpty().withMessage('Username can not be empty'),
@@ -70,16 +72,6 @@ router.post("/reset-password/:token",
 router.get("/user",
     authenticate,
     AuthController.getUserAuthenticated
-)
-
-router.post("/update-password",
-    authenticate,
-    body('current_password')
-    .notEmpty().withMessage("Current password can not be empty"),
-    body('password')
-    .notEmpty().isLength({min:8}).withMessage("New password is mandatory"),
-    handleInputErrors,
-    AuthController.updateCurrentUserPassword
 )
 
 router.post("/check-password",

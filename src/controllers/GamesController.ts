@@ -17,5 +17,5 @@ export class GamesController {
         } catch (error) {
             
         }
-    }
+    } 
 }

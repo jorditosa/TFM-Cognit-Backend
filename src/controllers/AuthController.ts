@@ -60,11 +60,11 @@ export class AuthController {
 
             await user.save()
 
-            // await AuthEmail.sendConfirmationEmail({
-            //     username: user.username,
-            //     email: user.email,
-            //     token: user.token,
-            // })
+            await AuthEmail.sendConfirmationEmail({
+                 username: user.username,
+                 email: user.email,
+                 token: user.token,
+            })
             res.json("User created successfully")
         } catch (error) {
             res.status(500).json({error: "Error creating user"})
@@ -181,25 +181,6 @@ export class AuthController {
         res.json(req.user)
     }
 
-    static updateCurrentUserPassword = async (req: Request, res: Response, next: NextFunction) => {
-        const { current_password, password } = req.body
-        const { id } = req.user
-
-        const user = await User.findByPk(id)
-
-        const isPasswordCorrect = await checkPassword(current_password, user.password)
-        if(!isPasswordCorrect) {
-            const error = new Error("Current password not valid")
-            res.status(401).json({ error: error.message})
-            return
-        }
-
-        user.password = await hashPassword(password)
-        await user.save()
-
-        res.json(user)
-    }
-
     static checkPassword = async (req: Request, res: Response, next: NextFunction) => {
         const { password } = req.body
         const { id } = req.user
@@ -214,5 +195,23 @@ export class AuthController {
         }
 
         res.json("Correct Password")
+    }
+
+    static updatePlayerPoints = async (req: Request, res: Response, next: NextFunction) => {
+        const {email, points } = req.body
+
+        const user = await User.findOne({ where: {email}})
+
+        if(!user) {
+            const error = new Error("User not valid")
+            res.status(404).json({ error: error.message})
+            return
+        }
+
+        // Assign new points
+        user.points = points
+        await user.save()
+
+        res.json("Correct points update")
     }
 }
