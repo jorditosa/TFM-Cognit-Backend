@@ -86,11 +86,7 @@ export class AuthController {
 
             // Establecer cookie
             const userData = { id: user.id, email: user.email, points: user.points}; 
-            res.cookie("COGNIT_USER", JSON.stringify(userData), {
-                maxAge: 365 * 24 * 60 * 60 * 1000,
-                sameSite: 'strict',
-                secure: true
-            })
+            res.cookie("COGNIT_USER", JSON.stringify(userData))
             // Devolver confirmacion
             res.json({ message: "Account confirmed", user: userData });
         } catch (error) {
@@ -123,11 +119,7 @@ export class AuthController {
         }
 
         const userData = { id: user.id, email: user.email, points: user.points}; 
-        res.cookie("COGNIT_USER", JSON.stringify(userData), {
-            maxAge: 365 * 24 * 60 * 60 * 1000,
-            sameSite: 'strict',
-            secure: true
-        })
+        res.cookie("COGNIT_USER", JSON.stringify(userData))
         res.json({ message: "User authenticated", user: userData });
     }
 
