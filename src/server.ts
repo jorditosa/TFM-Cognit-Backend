@@ -24,7 +24,7 @@ connectDB()
 const app = express()
 app.use(helmet());
 app.use(cors({
-    origin: ['https://cognit.website', 'http//localhost:5175'],
+    origin: ['https://cognit.website', 'http://localhost:5175'],
     credentials: true,
 }));
 app.use(morgan('dev'))
