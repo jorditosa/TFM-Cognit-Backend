@@ -86,7 +86,6 @@ export class AuthController {
 
             // Establecer cookie
             const userData = { id: user.id, email: user.email, points: user.points}; 
-            res.cookie("COGNIT_USER", JSON.stringify(userData))
             // Devolver confirmacion
             res.json({ message: "Account confirmed", user: userData });
         } catch (error) {
@@ -97,30 +96,32 @@ export class AuthController {
     static login = async (req: Request, res: Response, next: NextFunction) => {
         const { email, password } = req.body
 
-        const user = await User.findOne({ where: {email}})
-        if(!user) {
-            // Usuer exists
-            const error = new Error("User not found")
-            res.status(404).json({error: error.message})
-            return
-        }
+        try {
+            const user = await User.findOne({ where: {email}})
+            if(!user) {
+                // Usuer exists
+                const error = new Error("User not found")
+                res.status(404).json({error: error.message})
+                return
+            }
+            if(!user.confirmed) {
+                const error = new Error("Account not confirmed")
+                res.status(403).json({error: error.message})
+                return
+            }
+    
+            const isPasswordCorrect = await checkPassword(password, user.password)
+            if (!isPasswordCorrect) {
+                const error = new Error("Invalid credentials")
+                res.status(401).json({error: error.message})
+                return
+            }
 
-        if(!user.confirmed) {
-            const error = new Error("Account not confirmed")
-            res.status(403).json({error: error.message})
-            return
+            const userData = { id: user.id, email: user.email, points: user.points}; 
+            res.json({ message: "User authenticated", user: userData });
+        } catch (error) {
+            res.status(500).json({ error: "User not authenticated" });
         }
-
-        const isPasswordCorrect = await checkPassword(password, user.password)
-        if (!isPasswordCorrect) {
-            const error = new Error("Invalid credentials")
-            res.status(401).json({error: error.message})
-            return
-        }
-
-        const userData = { id: user.id, email: user.email, points: user.points}; 
-        res.cookie("COGNIT_USER", JSON.stringify(userData))
-        res.json({ message: "User authenticated", user: userData });
     }
 
     static forgotPassword = async (req: Request, res: Response, next: NextFunction) => {

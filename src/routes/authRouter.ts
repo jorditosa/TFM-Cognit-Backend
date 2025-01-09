@@ -82,4 +82,9 @@ router.post("/check-password",
     AuthController.checkPassword
 )
 
+router.get('/user-cookie', (req, res) => {
+    const cookie = req.cookies.COGNIT_USER;
+    res.send(cookie ? `Cookie: ${cookie}` : 'No cookie found');
+  });
+
 export default router
