@@ -3,7 +3,6 @@ import User from "../models/User"
 import { checkPassword, hashPassword } from "../utils/auth"
 import { generateToken } from "../utils/genToken"
 import { AuthEmail } from "../emails/AuthEmail"
-import { generateJWT } from "../utils/jwt"
 
 export class AuthController {
     static getAllUsers = async (req: Request,res: Response) => {
@@ -87,7 +86,11 @@ export class AuthController {
 
             // Establecer cookie
             const userData = { id: user.id, email: user.email, points: user.points}; 
-            res.cookie("COGNIT_USER", JSON.stringify(userData))
+            res.cookie("COGNIT_USER", JSON.stringify(userData), {
+                maxAge: 365 * 24 * 60 * 60 * 1000,
+                sameSite: 'strict',
+                secure: true
+            })
             // Devolver confirmacion
             res.json({ message: "Account confirmed", user: userData });
         } catch (error) {
@@ -120,7 +123,11 @@ export class AuthController {
         }
 
         const userData = { id: user.id, email: user.email, points: user.points}; 
-        res.cookie("COGNIT_USER", JSON.stringify(userData))
+        res.cookie("COGNIT_USER", JSON.stringify(userData), {
+            maxAge: 365 * 24 * 60 * 60 * 1000,
+            sameSite: 'strict',
+            secure: true
+        })
         res.json({ message: "User authenticated", user: userData });
     }
 

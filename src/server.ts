@@ -7,6 +7,7 @@ import gamesRouter from './routes/gamesRouter'
 import helmet from "helmet";
 import cors from 'cors'
 import session from 'express-session'
+import cookieParser from 'cookie-parser'
 
 async function connectDB() {
     try {
@@ -24,7 +25,7 @@ connectDB()
 const app = express()
 app.use(helmet());
 app.use(cors({
-    origin: ['http://localhost:5175', 'https://cognit.website'],
+    origin: '*',
     credentials: true,
 }));
 app.use(morgan('dev'))
@@ -32,18 +33,7 @@ app.use(morgan('dev'))
 app.use(express.json())
 
 // session cookies
-app.use(
-    session({
-        secret: 'cognit',
-        resave: false,
-        saveUninitialized: false,
-        cookie: {
-            secure: false,
-            httpOnly: true,
-            maxAge: 1000 * 60 * 60 * 24 * 180
-        }
-    })
-)
+app.use(cookieParser());
 
 // routing
 app.use('/api/auth', usersRouter)
