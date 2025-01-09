@@ -6,7 +6,6 @@ import usersRouter from './routes/authRouter'
 import gamesRouter from './routes/gamesRouter'
 import helmet from "helmet";
 import cors from 'cors'
-import session from 'express-session'
 import cookieParser from 'cookie-parser'
 
 async function connectDB() {
