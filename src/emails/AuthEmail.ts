@@ -14,8 +14,8 @@ export class AuthEmail {
             subject: "Cognit - Confirmar compte",
             html: `
                 <h1> Hola ${user.username}! </h1>
-                <p>T'has registrat a Comynit, només queda que confirmis el teu registre per formar part de tota la comynitat, així doncs</p>
-                <a href=${process.env.FRONTEND_URL}/confirm-account>confirma el teu compte</a>,
+                <p>T'has registrat a COGNIT, només queda que confirmis el teu registre per formar part de tota la comunitat, pots fer-ho clicant a </p>
+                <a href="${process.env.FRONTEND_URL}/confirm-account">confirma el teu compte</a>,
                 <p>indicant el codi de registre: ${user.token}</p>
             `
         })
