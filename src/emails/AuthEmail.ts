@@ -9,7 +9,7 @@ type EmailType = {
 export class AuthEmail {
     static sendConfirmationEmail = async (user: EmailType) => {
         const email = await transport.sendMail({
-            from: "Cognit <admin@cognit.com>",
+            from: "Cognit <admin@cognit.website>",
             to: user.email,
             subject: "Cognit - Confirmar compte",
             html: `
@@ -37,7 +37,7 @@ export class AuthEmail {
 
     static sendPasswordResetToken = async (user: EmailType) => {
         const email = await transport.sendMail({
-            from: "Cognit <admin@cognit.com>",
+            from: "Cognit <admin@cognit.website>",
             to: user.email,
             subject: "Cognit - Reestableix contrasenya",
             html: `
